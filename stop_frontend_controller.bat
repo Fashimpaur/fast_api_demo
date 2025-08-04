@@ -1,8 +1,14 @@
 @echo off
-if exist frontend_controller.pid (
-    set /p PID=<frontend_controller.pid
-    taskkill /PID %PID% /F > nul 2>&1
-    del frontend_controller.pid
-) else (
-    echo PID file not found. Server may not be running.
+setlocal
+
+if not exist frontend_controller.pid (
+  echo frontend_controller.pid not found. Server may not be running.
+  exit /b
 )
+
+set /p PID=<frontend_controller.pid
+
+powershell -Command "Stop-Process -Id %PID% -Force"
+
+del frontend_controller.pid
+echo frontend.controller stopped.
