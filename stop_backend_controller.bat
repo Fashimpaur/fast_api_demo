@@ -1,4 +1,8 @@
 @echo off
-REM Stop all uvicorn processes (forcefully)
-taskkill /F /IM uvicorn.exe >nul 2>&1
-taskkill /F /IM python.exe >nul 2>&1
+if exist backend_controller.pid (
+    set /p PID=<backend_controller.pid
+    taskkill /PID %PID% /F > nul 2>&1
+    del backend_controller.pid
+) else (
+    echo PID file not found. Server may not be running.
+)
