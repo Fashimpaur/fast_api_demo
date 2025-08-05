@@ -1,7 +1,8 @@
 @echo off
 setlocal
 
-set PID_FILE=backend_controller.pid
+REM PID file is located in the project root, so go up one directory
+set PID_FILE=..\backend_controller.pid
 
 if not exist %PID_FILE% (
   echo backend_controller.pid not found. Server may not be running.

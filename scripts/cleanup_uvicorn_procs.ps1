@@ -1,8 +1,10 @@
-# Get the directory where this script is located
+# Get the directory where this script is located (scripts\)
 $scriptDirectory = Split-Path -Parent $MyInvocation.MyCommand.Definition
-$pidDirectory = $scriptDirectory  # Use the script's location as the PID directory
 
-Write-Host "Looking for .pid files in: $pidDirectory"
+# Project root is one level up from scripts\
+$projectRoot = Resolve-Path "$scriptDirectory\.."
+
+Write-Host "Looking for .pid files in project root: $projectRoot"
 
 # STEP 1: Stop all running uvicorn processes
 Write-Host "Searching for all running uvicorn processes..."
@@ -28,11 +30,11 @@ if ($uvicornProcs.Count -eq 0) {
     }
 }
 
-# STEP 2: Delete all stale PID files
+# STEP 2: Delete all stale PID files in project root
 Write-Host "Removing stale .pid files..."
 
-if (Test-Path $pidDirectory) {
-    $pidFiles = Get-ChildItem -Path $pidDirectory -Filter *.pid
+if (Test-Path $projectRoot) {
+    $pidFiles = Get-ChildItem -Path $projectRoot -Filter *.pid
     if ($pidFiles.Count -eq 0) {
         Write-Host "No stale .pid files found."
     } else {
@@ -46,5 +48,5 @@ if (Test-Path $pidDirectory) {
         }
     }
 } else {
-    Write-Host "PID directory not found: $pidDirectory"
+    Write-Host "Project root directory not found: $projectRoot"
 }
