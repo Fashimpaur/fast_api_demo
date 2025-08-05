@@ -1,15 +1,21 @@
 @echo off
 setlocal
 
-if not exist backend_controller.pid (
+set PID_FILE=backend_controller.pid
+
+if not exist %PID_FILE% (
   echo backend_controller.pid not found. Server may not be running.
   exit /b
 )
 
-set /p PID=<backend_controller.pid
+set /p PID=<&PID_FILE%
 
-REM Kill the process
-powershell -Command "Stop-Process -Id %PID% -Force"
+powershell -Command "try { Stop-Process -Id %PID% -Force -ErrorAction Stop; exit 0 } catch { Write-Host 'Failed to stop process with PID %PID%'; exit 1 }"
 
-del backend_controller.pid
-echo backend.controller stopped.
+REM If the above command succeeded, delete the pid file
+if %ERRORLEVEL%==0 (
+  del %PID_FILE%
+  echo backend_controller stopped.
+) else (
+  echo WARNING: backend_controller may still be running. PID %PID% was not terminated.
+)

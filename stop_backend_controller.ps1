@@ -1,7 +1,17 @@
-if (Test-Path "backend_controller.pid") {
-    $process_pid = Get-Content "backend_controller.pid"
-    Stop-Process -Id $process_pid -Force -ErrorAction SilentlyContinue
-    Remove-Item "backend_controller.pid"
-} else {
-    Write-Host "PID file not found. Server may not be running."
+$pidFile = "backend_controller.pid"
+
+if (!(Test-Path $pidFile)) {
+    Write-Host "$pidFile not found. Server may not be running."
+    exit 1
 }
+
+$pid_id = Get-Content $pidFile
+
+try {
+    Stop-Process -Id $pid_id -Force -ErrorAction Stop
+    Remove-Item $pidFile
+    Write-Host "backend_controller stopped."
+} catch {
+    Write-Host "WARNING: Failed to stop backend_controller process with PID $pid_id. PID file not deleted."
+}
+
