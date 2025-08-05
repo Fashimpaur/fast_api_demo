@@ -5,12 +5,18 @@ set PID_FILE=backend_controller.pid
 
 if not exist %PID_FILE% (
   echo backend_controller.pid not found. Server may not be running.
-  exit /b
+  exit /b 1
 )
 
-set /p PID=<&PID_FILE%
+REM Read PID from file
+for /f %%P in (%PID_FILE%) do set PID=%%P
 
-powershell -Command "try { Stop-Process -Id %PID% -Force -ErrorAction Stop; exit 0 } catch { Write-Host 'Failed to stop process with PID %PID%'; exit 1 }"
+REM Debug: show raw PID
+echo Read PID: [%PID%]
+
+REM Let PowerShell do the numeric check and stop
+powershell -NoProfile -Command ^
+    "if ([int]::TryParse('%PID%', [ref]0)) { try { Stop-Process -Id %PID% -Force -ErrorAction Stop; exit 0 } catch { Write-Host 'Failed to stop backend_controller process with PID %PID%'; exit 1 } } else { Write-Host 'Invalid PID format: %PID%'; exit 1 }"
 
 REM If the above command succeeded, delete the pid file
 if %ERRORLEVEL%==0 (
