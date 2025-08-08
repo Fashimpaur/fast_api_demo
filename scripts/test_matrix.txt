@@ -1,0 +1,6 @@
+| Test # | Start Script (Backend) | Stop Script (Backend) | Start Script (Frontend) | Stop Script (Frontend) | Notes                                                         |
+| ------ | ---------------------- | --------------------- | ----------------------- | ---------------------- | ------------------------------------------------------------- |
+| 1      | start_backend.bat      | stop_backend.bat      | start_frontend.bat      | stop_frontend.bat      | All batch files                                               |
+| 2      | start_backend.bat      | stop_backend.ps1      | start_frontend.bat      | stop_frontend.ps1      | Batch start, PowerShell stop                                  |
+| 3      | start_backend.ps1      | stop_backend.bat      | start_frontend.ps1      | stop_frontend.bat      | PowerShell start, Batch stop                                  |
+| 4      | start_backend.ps1      | stop_backend.ps1      | start_frontend.ps1      | stop_frontend.ps1      | All PowerShell files                                          |
