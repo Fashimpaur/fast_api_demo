@@ -8,6 +8,8 @@ wheel = "*"
 fastapi = "*"
 setuptools = "*"
 uvicorn = "*"
+python-dotenv = "*"
+databases = "*"
 
 [dev-packages]
 
